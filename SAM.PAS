@@ -1,5 +1,5 @@
 Program P;
-Uses CRT,Graph,F_Mouse;
+Uses ptcCRT,ptcGraph,ptcMouse;
 Const
      KStars = 200;
      RStar  = 5;
@@ -133,8 +133,10 @@ begin
      ScreenPos:=StageSize;
      InitMouse;
      {ShowMouse;}
-     MouseWindow(320-MaxMouseX,175-MaxMouseY,320+MaxMouseX,175+MaxMouseY);
-     MouseGotoXY(320,175);
+     //MouseWindow(320-MaxMouseX,175-MaxMouseY,320+MaxMouseX,175+MaxMouseY);
+     //MouseGotoXY(320,175);
+     SetMouseWindow(320-MaxMouseX,175-MaxMouseY,320+MaxMouseX,175+MaxMouseY);
+     SetMousePos(320,175);
      SamX:=trunc(ScreenX/2);
      IsGameOver:=False;
      SamY:=ScreenY-40;
@@ -261,7 +263,7 @@ end;
 procedure Keys;
 var
    Ch :Char;
-   X,Y,MKey:integer;
+   X,Y,MKey:LongInt;//integer;
 begin
      if Keypressed then begin
         Ch:=(UpCase(ReadKey));
@@ -276,13 +278,15 @@ begin
         while KeyPressed do ReadKey;
      end;
 
-     GetMouseState(MKey,X,Y);
+     //GetMouseState(MKey,X,Y);
+     GetMouseState(X,Y,MKey);
 
      X:=X-320;
      Y:=Y-175;
      SamX:=SamX+X;
      SamY:=SamY+Y;
-     MouseGotoXY(320,175);
+     //MouseGotoXY(320,175);
+     SetMousePos(320,175);
      if (MKey=1) and not(IsSamFire) or (MKey=3) then StartSamFire(SamX,SamY);
      if (MKey=2)                    or (MKey=3) then ScreenPos:=ScreenPos+ScreenFast;
 
@@ -381,6 +385,7 @@ procedure Process;
 begin
      Repeat
            if not(IsGameOver) then Keys;
+           Delay(50);
            Pages;
            NextFrame;
            ScreenPos:=ScreenPos+SpeedScreen;
